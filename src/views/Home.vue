@@ -9,14 +9,15 @@
     <div class="tools-grid">
       <div
         v-for="tool in tools"
-        :key="tool.route"
+        :key="tool.name"
         class="tool-card"
-        @click="$router.push(tool.route)"
+        @click="tool.route ? $router.push(tool.route) : window.open(tool.link, '_blank')"
       >
         <div class="tool-icon">{{ tool.icon }}</div>
         <div class="tool-info">
           <h2 class="tool-name">{{ tool.name }}</h2>
           <p class="tool-desc">{{ tool.desc }}</p>
+          <span v-if="tool.link" class="tool-badge">新窗口打开</span>
         </div>
         <div class="tool-arrow">→</div>
       </div>
@@ -47,6 +48,12 @@ const tools = [
     name: 'iPad 参数对比',
     desc: 'iPad 10 起全系列参数对比 & 二手性价比推荐',
     route: '/ipad-compare'
+  },
+  {
+    icon: '🔐',
+    name: '密码管理器',
+    desc: '安全存储和管理你的密码',
+    link: location.protocol + '//' + location.hostname + ':8080'
   }
 ]
 </script>
@@ -127,6 +134,17 @@ const tools = [
   font-size: 14px;
   color: #64748b;
   margin: 0;
+}
+
+.tool-badge {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  background: rgba(99,102,241,0.1);
+  color: #6366f1;
+  font-weight: 500;
 }
 
 .tool-arrow {
