@@ -62,6 +62,12 @@ const tools = [
     name: '密码管理器',
     desc: '安全存储和管理你的密码',
     link: location.protocol + '//' + location.hostname + ':8080'
+  },
+  {
+    icon: '🏖️',
+    name: '躺平计算器',
+    desc: '计算你需要多少钱才能躺平退休',
+    link: location.protocol + '//' + location.hostname + ':81'
   }
 ]
 </script>

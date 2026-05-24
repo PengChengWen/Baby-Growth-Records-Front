@@ -4,7 +4,7 @@
       <button class="back-btn" @click="$router.push('/')">← 返回</button>
       <div class="header-icon">📱</div>
       <h1 class="title">苹果手机参数对比</h1>
-      <p class="subtitle">iPhone 13 起全系列 · 二手性价比分析</p>
+      <p class="subtitle">iPhone 13 - 17 全系列 · 二手性价比分析 · 更新于 2026.5</p>
     </header>
 
     <!-- 推荐卡片 -->
@@ -13,39 +13,38 @@
       <div class="recommend-cards">
         <div class="rec-card best">
           <div class="rec-badge">最佳性价比</div>
-          <div class="rec-model">iPhone 13 Pro</div>
-          <div class="rec-price">二手参考 ¥2200-2800</div>
+          <div class="rec-model">iPhone 15 Pro</div>
+          <div class="rec-price">二手参考 ¥3800-4500</div>
           <div class="rec-reasons">
-            <span>✓ A15 满血芯片</span>
-            <span>✓ 120Hz ProMotion</span>
-            <span>✓ 三摄系统</span>
-            <span>✓ 续航优秀</span>
+            <span>✓ A17 Pro 芯片，支持 Apple Intelligence</span>
+            <span>✓ 120Hz ProMotion + 常亮显示</span>
+            <span>✓ USB-C 3.0 高速传输</span>
+            <span>✓ 8GB 内存，流畅用 3 年+</span>
           </div>
         </div>
         <div class="rec-card">
           <div class="rec-badge">预算之选</div>
           <div class="rec-model">iPhone 13</div>
-          <div class="rec-price">二手参考 ¥1600-2100</div>
+          <div class="rec-price">二手参考 ¥1400-1900</div>
           <div class="rec-reasons">
-            <span>✓ A15 芯片够用</span>
+            <span>✓ A15 芯片依然够用</span>
             <span>✓ 续航不错</span>
             <span>✓ 价格最低</span>
-            <span>✓ 生态完整</span>
+            <span>✓ iOS 生态完整</span>
           </div>
         </div>
         <div class="rec-card">
-          <div class="rec-badge">均衡之选</div>
-          <div class="rec-model">iPhone 14 Pro</div>
-          <div class="rec-price">二手参考 ¥3200-3800</div>
+          <div class="rec-badge">新品尝鲜</div>
+          <div class="rec-model">iPhone 17</div>
+          <div class="rec-price">全新 ¥6999 起</div>
           <div class="rec-reasons">
-            <span>✓ 灵动岛</span>
-            <span>✓ 4800万主摄</span>
-            <span>✓ A16 芯片</span>
-            <span>✓ 常亮显示</span>
+            <span>✓ A19 芯片，20% 快于 A18</span>
+            <span>✓ 首次 ProMotion 高刷</span>
+            <span>✓ 48MP 双 Fusion 摄像头</span>
+            <span>✓ 256GB 起步</span>
           </div>
         </div>
       </div>
-      <p class="rec-tip">💡 以上价格为 2025 年中二手市场参考价，实际价格因成色、存储容量而异</p>
     </section>
 
     <!-- 筛选 -->
@@ -73,6 +72,7 @@
           <button class="action-btn" @click="clearModels">清空</button>
           <button class="action-btn" @click="selectTierModels('Pro 版')">只选Pro</button>
           <button class="action-btn" @click="selectTierModels('标准版')">只选标准</button>
+          <button class="action-btn" @click="selectTierModels('Air')">只选Air</button>
         </div>
         <div class="model-checkboxes">
           <label
@@ -123,19 +123,27 @@
       <div class="advice-cards">
         <div class="advice-card">
           <h3>🎮 游戏用户</h3>
-          <p>优先选 <strong>Pro 系列</strong>，120Hz 高刷 + 满血芯片体验差距明显。iPhone 13 Pro 是性价比最高的游戏机。</p>
+          <p>预算充足选 <strong>iPhone 17 Pro</strong>，A19 Pro + 均热板散热，持续性能提升 40%。二手市场选 15 Pro，A17 Pro 依然强劲。</p>
         </div>
         <div class="advice-card">
           <h3>📸 拍照需求</h3>
-          <p>14 Pro 起升级 4800 万像素，提升巨大。预算有限选 13 Pro Max，长焦 + 大底也够用。</p>
+          <p><strong>iPhone 17 Pro</strong> 三颗 48MP 摄像头 + 8x Fusion 变焦，是目前最强拍照 iPhone。预算有限选 16 Pro，5x 光学变焦也够用。</p>
         </div>
         <div class="advice-card">
-          <h3>💰 纯预算导向</h3>
-          <p>iPhone 13 是底线，再往下不建议。A15 能保证 2-3 年流畅使用，是最安全的入门选择。</p>
+          <h3>💰 二手性价比</h3>
+          <p><strong>iPhone 15 Pro</strong> 是当前最佳二手选择，A17 Pro 支持 Apple Intelligence，8GB 内存，USB-C 3.0，¥3800-4500 性价比极高。</p>
         </div>
         <div class="advice-card">
           <h3>🔋 续航优先</h3>
-          <p>Max/Plus 系列续航碾压小屏。13 Pro Max 续航至今仍是顶级，重度使用轻松一天。</p>
+          <p><strong>iPhone 17 Pro Max</strong> 史上最大电池。二手选 16 Pro Max 或 13 Pro Max，续航都是顶级水平。</p>
+        </div>
+        <div class="advice-card">
+          <h3>🆕 想要最新</h3>
+          <p><strong>iPhone Air</strong> 是全新产品线，5.6mm 极致轻薄钛金属机身，A19 Pro 芯片，适合追求时尚与性能的用户。</p>
+        </div>
+        <div class="advice-card">
+          <h3>⚠️ 不建议买</h3>
+          <p>iPhone 13 mini 电池太小，iPhone 14 系列无灵动岛且 Lightning 接口逐渐淘汰。<strong>iPhone 15 起</strong>才是安全底线。</p>
         </div>
       </div>
     </section>
@@ -153,7 +161,7 @@ const selectedTier = ref('全部')
 const showSelector = ref(false)
 const selectedModels = ref([])
 
-const tiers = ['全部', '标准版', 'Pro 版', '大屏']
+const tiers = ['全部', '标准版', 'Air', 'Pro 版', '大屏']
 
 function selectAllModels() {
   selectedModels.value = phones.map(p => p.model)
@@ -515,7 +523,7 @@ const phones = [
   {
     model: 'iPhone 16 Pro Max',
     year: '2024.9',
-    price: '¥7500-8500',
+    price: '¥6500-7500',
     tier: '大屏',
     highlight: false,
     specs: {
@@ -532,6 +540,94 @@ const phones = [
       alwaysOn: '✓',
       usbc: '✓ USB 3.0',
       launchPrice: '¥9999起'
+    }
+  },
+  {
+    model: 'iPhone 17',
+    year: '2025.9',
+    price: '全新 ¥6999起',
+    tier: '标准版',
+    highlight: true,
+    specs: {
+      chip: 'A19',
+      screen: '6.3" OLED ProMotion',
+      refresh: '120Hz',
+      ram: '8GB',
+      camera: '48MP 双 Fusion',
+      telephoto: '无 (2x 裁切)',
+      battery: '未公布',
+      weight: '未公布',
+      storage: '256/512/1GB',
+      dynamicIsland: '✓',
+      alwaysOn: '❌',
+      usbc: '✓ USB 2.0',
+      launchPrice: '¥6999起'
+    }
+  },
+  {
+    model: 'iPhone Air',
+    year: '2025.9',
+    price: '全新 ¥8999起',
+    tier: 'Air',
+    highlight: true,
+    specs: {
+      chip: 'A19 Pro',
+      screen: '6.5" OLED ProMotion',
+      refresh: '120Hz',
+      ram: '8GB',
+      camera: '48MP Fusion',
+      telephoto: '无',
+      battery: '未公布',
+      weight: '未公布',
+      storage: '256/512/1GB',
+      dynamicIsland: '✓',
+      alwaysOn: '❌',
+      usbc: '✓ USB 2.0',
+      launchPrice: '¥8999起'
+    }
+  },
+  {
+    model: 'iPhone 17 Pro',
+    year: '2025.9',
+    price: '全新 ¥9999起',
+    tier: 'Pro 版',
+    highlight: true,
+    specs: {
+      chip: 'A19 Pro + 均热板',
+      screen: '6.3" OLED ProMotion',
+      refresh: '120Hz',
+      ram: '12GB',
+      camera: '48MP x3 三摄',
+      telephoto: '4x 光学 / 8x Fusion',
+      battery: '未公布',
+      weight: '未公布',
+      storage: '256/512/1TB/2TB',
+      dynamicIsland: '✓',
+      alwaysOn: '✓',
+      usbc: '✓ USB 3.0',
+      launchPrice: '¥9999起'
+    }
+  },
+  {
+    model: 'iPhone 17 Pro Max',
+    year: '2025.9',
+    price: '全新 ¥11999起',
+    tier: '大屏',
+    highlight: true,
+    specs: {
+      chip: 'A19 Pro + 均热板',
+      screen: '6.9" OLED ProMotion',
+      refresh: '120Hz',
+      ram: '12GB',
+      camera: '48MP x3 三摄',
+      telephoto: '4x 光学 / 8x Fusion',
+      battery: 'iPhone 史上最大',
+      weight: '未公布',
+      storage: '256/512/1TB/2TB',
+      dynamicIsland: '✓',
+      alwaysOn: '✓',
+      usbc: '✓ USB 3.0',
+      launchPrice: '¥11999起'
     }
   }
 ]
