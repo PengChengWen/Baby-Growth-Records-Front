@@ -61,6 +61,34 @@
       </div>
     </section>
 
+    <!-- 指定设备对比 -->
+    <section class="select-section">
+      <div class="select-header" @click="showSelector = !showSelector">
+        <span>🎯 指定设备对比 <span class="selected-count" v-if="selectedModels.length">（已选 {{ selectedModels.length }} 台）</span></span>
+        <span class="toggle-arrow" :class="{ open: showSelector }">▼</span>
+      </div>
+      <div class="select-body" v-show="showSelector">
+        <div class="select-actions">
+          <button class="action-btn" @click="selectAllModels">全选</button>
+          <button class="action-btn" @click="clearModels">清空</button>
+          <button class="action-btn" @click="selectTierModels('Pro')">只选Pro</button>
+          <button class="action-btn" @click="selectTierModels('Air')">只选Air</button>
+        </div>
+        <div class="model-checkboxes">
+          <label
+            v-for="ipad in ipads"
+            :key="ipad.model"
+            class="checkbox-item"
+            :class="{ checked: selectedModels.includes(ipad.model) }"
+          >
+            <input type="checkbox" :value="ipad.model" v-model="selectedModels" />
+            <span class="cb-model">{{ ipad.model }}</span>
+            <span class="cb-price">{{ ipad.price }}</span>
+          </label>
+        </div>
+      </div>
+    </section>
+
     <!-- 对比表 -->
     <section class="table-section">
       <div class="table-wrapper">
@@ -122,8 +150,20 @@
 import { ref, computed } from 'vue'
 
 const selectedTier = ref('全部')
+const showSelector = ref(false)
+const selectedModels = ref([])
 
 const tiers = ['全部', '数字系列', 'Air', 'mini', 'Pro']
+
+function selectAllModels() {
+  selectedModels.value = ipads.map(p => p.model)
+}
+function clearModels() {
+  selectedModels.value = []
+}
+function selectTierModels(tier) {
+  selectedModels.value = ipads.filter(p => p.tier === tier).map(p => p.model)
+}
 
 const specKeys = [
   { key: 'chip', label: '芯片' },
@@ -299,8 +339,13 @@ const ipads = [
 ]
 
 const filteredIpads = computed(() => {
-  if (selectedTier.value === '全部') return ipads
-  return ipads.filter(p => p.tier === selectedTier.value)
+  let list = ipads
+  if (selectedModels.value.length) {
+    list = list.filter(p => selectedModels.value.includes(p.model))
+  } else if (selectedTier.value !== '全部') {
+    list = list.filter(p => p.tier === selectedTier.value)
+  }
+  return list
 })
 </script>
 
@@ -481,6 +526,79 @@ th.sticky-col { z-index: 3; background: rgba(248,250,252,0.95); }
 .advice-card strong { color: #6366f1; }
 
 .footer { text-align: center; font-size: 12px; color: #94a3b8; }
+
+/* 指定设备选择器 */
+.select-section { margin-bottom: 24px; }
+
+.select-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.9);
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+  transition: all 0.2s;
+}
+
+.select-header:hover { background: rgba(255,255,255,0.95); }
+.selected-count { color: #6366f1; font-weight: 700; }
+.toggle-arrow { font-size: 12px; color: #94a3b8; transition: transform 0.3s; }
+.toggle-arrow.open { transform: rotate(180deg); }
+
+.select-body {
+  margin-top: 12px;
+  padding: 20px;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.9);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+}
+
+.select-actions { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+
+.action-btn {
+  padding: 6px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(99,102,241,0.2);
+  background: rgba(99,102,241,0.06);
+  color: #6366f1;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-btn:hover { background: rgba(99,102,241,0.15); }
+
+.model-checkboxes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(226,232,240,0.6);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 13px;
+}
+
+.checkbox-item:hover { background: rgba(248,250,252,0.8); }
+.checkbox-item.checked { background: rgba(238,242,255,0.8); border-color: rgba(99,102,241,0.3); }
+.checkbox-item input[type="checkbox"] { accent-color: #6366f1; width: 16px; height: 16px; flex-shrink: 0; }
+.cb-model { font-weight: 600; color: #1e293b; flex: 1; }
+.cb-price { font-size: 11px; color: #6366f1; }
 
 @media (max-width: 768px) {
   .header { padding: 32px 0 24px; }
