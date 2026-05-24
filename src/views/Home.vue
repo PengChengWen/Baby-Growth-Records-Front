@@ -41,6 +41,12 @@ const tools = [
     name: '苹果手机参数对比',
     desc: 'iPhone 13 起全系列参数对比 & 二手性价比推荐',
     route: '/iphone-compare'
+  },
+  {
+    icon: '📟',
+    name: 'iPad 参数对比',
+    desc: 'iPad 10 起全系列参数对比 & 二手性价比推荐',
+    route: '/ipad-compare'
   }
 ]
 </script>

@@ -15,6 +15,11 @@ const routes = [
     path: '/iphone-compare',
     name: 'IPhoneCompare',
     component: () => import('../views/IPhoneCompare.vue')
+  },
+  {
+    path: '/ipad-compare',
+    name: 'IPadCompare',
+    component: () => import('../views/IPadCompare.vue')
   }
 ]
 
