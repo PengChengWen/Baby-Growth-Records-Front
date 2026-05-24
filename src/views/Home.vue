@@ -11,7 +11,7 @@
         v-for="tool in tools"
         :key="tool.name"
         class="tool-card"
-        @click="tool.route ? $router.push(tool.route) : window.open(tool.link, '_blank')"
+        @click="openTool(tool)"
       >
         <div class="tool-icon">{{ tool.icon }}</div>
         <div class="tool-info">
@@ -30,6 +30,14 @@
 </template>
 
 <script setup>
+function openTool(tool) {
+  if (tool.route) {
+    window.location.href = tool.route
+  } else if (tool.link) {
+    window.open(tool.link, '_blank')
+  }
+}
+
 const tools = [
   {
     icon: '💉',
