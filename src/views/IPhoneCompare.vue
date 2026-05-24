@@ -1,0 +1,831 @@
+<template>
+  <div class="iphone-compare">
+    <header class="header">
+      <button class="back-btn" @click="$router.push('/')">← 返回</button>
+      <div class="header-icon">📱</div>
+      <h1 class="title">苹果手机参数对比</h1>
+      <p class="subtitle">iPhone 13 起全系列 · 二手性价比分析</p>
+    </header>
+
+    <!-- 推荐卡片 -->
+    <section class="recommend-section">
+      <h2 class="section-title">🏆 二手性价比推荐</h2>
+      <div class="recommend-cards">
+        <div class="rec-card best">
+          <div class="rec-badge">最佳性价比</div>
+          <div class="rec-model">iPhone 13 Pro</div>
+          <div class="rec-price">二手参考 ¥2200-2800</div>
+          <div class="rec-reasons">
+            <span>✓ A15 满血芯片</span>
+            <span>✓ 120Hz ProMotion</span>
+            <span>✓ 三摄系统</span>
+            <span>✓ 续航优秀</span>
+          </div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-badge">预算之选</div>
+          <div class="rec-model">iPhone 13</div>
+          <div class="rec-price">二手参考 ¥1600-2100</div>
+          <div class="rec-reasons">
+            <span>✓ A15 芯片够用</span>
+            <span>✓ 续航不错</span>
+            <span>✓ 价格最低</span>
+            <span>✓ 生态完整</span>
+          </div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-badge">均衡之选</div>
+          <div class="rec-model">iPhone 14 Pro</div>
+          <div class="rec-price">二手参考 ¥3200-3800</div>
+          <div class="rec-reasons">
+            <span>✓ 灵动岛</span>
+            <span>✓ 4800万主摄</span>
+            <span>✓ A16 芯片</span>
+            <span>✓ 常亮显示</span>
+          </div>
+        </div>
+      </div>
+      <p class="rec-tip">💡 以上价格为 2025 年中二手市场参考价，实际价格因成色、存储容量而异</p>
+    </section>
+
+    <!-- 筛选 -->
+    <section class="filter-section">
+      <div class="filter-row">
+        <button
+          v-for="tier in tiers"
+          :key="tier"
+          class="filter-btn"
+          :class="{ active: selectedTier === tier }"
+          @click="selectedTier = tier"
+        >{{ tier }}</button>
+      </div>
+    </section>
+
+    <!-- 对比表 -->
+    <section class="table-section">
+      <div class="table-wrapper">
+        <table class="spec-table">
+          <thead>
+            <tr>
+              <th class="sticky-col">参数</th>
+              <th v-for="phone in filteredPhones" :key="phone.model" :class="{ highlight: phone.highlight }">
+                <div class="phone-header">
+                  <div class="phone-model">{{ phone.model }}</div>
+                  <div class="phone-year">{{ phone.year }}</div>
+                  <div class="phone-price">{{ phone.price }}</div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="spec in specKeys" :key="spec.key">
+              <td class="sticky-col spec-label">{{ spec.label }}</td>
+              <td v-for="phone in filteredPhones" :key="phone.model" :class="{ highlight: phone.highlight }">
+                {{ phone.specs[spec.key] }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 选购建议 -->
+    <section class="advice-section">
+      <h2 class="section-title">📋 选购建议</h2>
+      <div class="advice-cards">
+        <div class="advice-card">
+          <h3>🎮 游戏用户</h3>
+          <p>优先选 <strong>Pro 系列</strong>，120Hz 高刷 + 满血芯片体验差距明显。iPhone 13 Pro 是性价比最高的游戏机。</p>
+        </div>
+        <div class="advice-card">
+          <h3>📸 拍照需求</h3>
+          <p>14 Pro 起升级 4800 万像素，提升巨大。预算有限选 13 Pro Max，长焦 + 大底也够用。</p>
+        </div>
+        <div class="advice-card">
+          <h3>💰 纯预算导向</h3>
+          <p>iPhone 13 是底线，再往下不建议。A15 能保证 2-3 年流畅使用，是最安全的入门选择。</p>
+        </div>
+        <div class="advice-card">
+          <h3>🔋 续航优先</h3>
+          <p>Max/Plus 系列续航碾压小屏。13 Pro Max 续航至今仍是顶级，重度使用轻松一天。</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>* 参数来源于 Apple 官方数据，价格为二手市场参考</p>
+    </footer>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed } from 'vue'
+
+const selectedTier = ref('全部')
+
+const tiers = ['全部', '标准版', 'Pro 版', '大屏']
+
+const specKeys = [
+  { key: 'chip', label: '芯片' },
+  { key: 'screen', label: '屏幕' },
+  { key: 'refresh', label: '刷新率' },
+  { key: 'ram', label: '运行内存' },
+  { key: 'camera', label: '主摄' },
+  { key: 'telephoto', label: '长焦' },
+  { key: 'battery', label: '电池容量' },
+  { key: 'weight', label: '重量' },
+  { key: 'storage', label: '存储选项' },
+  { key: 'dynamicIsland', label: '灵动岛' },
+  { key: 'alwaysOn', label: '常亮显示' },
+  { key: 'usbc', label: 'USB-C' },
+  { key: 'launchPrice', label: '首发价' },
+]
+
+const phones = [
+  {
+    model: 'iPhone 13',
+    year: '2021.9',
+    price: '¥1600-2100',
+    tier: '标准版',
+    highlight: true,
+    specs: {
+      chip: 'A15 (4核GPU)',
+      screen: '6.1" OLED',
+      refresh: '60Hz',
+      ram: '4GB',
+      camera: '1200万',
+      telephoto: '无',
+      battery: '3227mAh',
+      weight: '173g',
+      storage: '128/256/512GB',
+      dynamicIsland: '❌',
+      alwaysOn: '❌',
+      usbc: '❌ Lightning',
+      launchPrice: '¥5999起'
+    }
+  },
+  {
+    model: 'iPhone 13 mini',
+    year: '2021.9',
+    price: '¥1300-1700',
+    tier: '标准版',
+    highlight: false,
+    specs: {
+      chip: 'A15 (4核GPU)',
+      screen: '5.4" OLED',
+      refresh: '60Hz',
+      ram: '4GB',
+      camera: '1200万',
+      telephoto: '无',
+      battery: '2406mAh',
+      weight: '140g',
+      storage: '128/256/512GB',
+      dynamicIsland: '❌',
+      alwaysOn: '❌',
+      usbc: '❌ Lightning',
+      launchPrice: '¥5199起'
+    }
+  },
+  {
+    model: 'iPhone 13 Pro',
+    year: '2021.9',
+    price: '¥2200-2800',
+    tier: 'Pro 版',
+    highlight: true,
+    specs: {
+      chip: 'A15 (5核GPU)',
+      screen: '6.1" OLED ProMotion',
+      refresh: '120Hz',
+      ram: '6GB',
+      camera: '1200万',
+      telephoto: '3x 光学',
+      battery: '3095mAh',
+      weight: '203g',
+      storage: '128/256/512/1TB',
+      dynamicIsland: '❌',
+      alwaysOn: '❌',
+      usbc: '❌ Lightning',
+      launchPrice: '¥7999起'
+    }
+  },
+  {
+    model: 'iPhone 13 Pro Max',
+    year: '2021.9',
+    price: '¥2500-3200',
+    tier: '大屏',
+    highlight: false,
+    specs: {
+      chip: 'A15 (5核GPU)',
+      screen: '6.7" OLED ProMotion',
+      refresh: '120Hz',
+      ram: '6GB',
+      camera: '1200万',
+      telephoto: '3x 光学',
+      battery: '4352mAh',
+      weight: '238g',
+      storage: '128/256/512/1TB',
+      dynamicIsland: '❌',
+      alwaysOn: '❌',
+      usbc: '❌ Lightning',
+      launchPrice: '¥8999起'
+    }
+  },
+  {
+    model: 'iPhone 14',
+    year: '2022.9',
+    price: '¥2300-2800',
+    tier: '标准版',
+    highlight: false,
+    specs: {
+      chip: 'A15 (5核GPU)',
+      screen: '6.1" OLED',
+      refresh: '60Hz',
+      ram: '6GB',
+      camera: '1200万',
+      telephoto: '无',
+      battery: '3279mAh',
+      weight: '172g',
+      storage: '128/256/512GB',
+      dynamicIsland: '❌',
+      alwaysOn: '❌',
+      usbc: '❌ Lightning',
+      launchPrice: '¥5999起'
+    }
+  },
+  {
+    model: 'iPhone 14 Plus',
+    year: '2022.9',
+    price: '¥2600-3200',
+    tier: '大屏',
+    highlight: false,
+    specs: {
+      chip: 'A15 (5核GPU)',
+      screen: '6.7" OLED',
+      refresh: '60Hz',
+      ram: '6GB',
+      camera: '1200万',
+      telephoto: '无',
+      battery: '4325mAh',
+      weight: '203g',
+      storage: '128/256/512GB',
+      dynamicIsland: '❌',
+      alwaysOn: '❌',
+      usbc: '❌ Lightning',
+      launchPrice: '¥6999起'
+    }
+  },
+  {
+    model: 'iPhone 14 Pro',
+    year: '2022.9',
+    price: '¥3200-3800',
+    tier: 'Pro 版',
+    highlight: true,
+    specs: {
+      chip: 'A16',
+      screen: '6.1" OLED ProMotion',
+      refresh: '120Hz',
+      ram: '6GB',
+      camera: '4800万',
+      telephoto: '3x 光学',
+      battery: '3200mAh',
+      weight: '206g',
+      storage: '128/256/512/1TB',
+      dynamicIsland: '✓',
+      alwaysOn: '✓',
+      usbc: '❌ Lightning',
+      launchPrice: '¥7999起'
+    }
+  },
+  {
+    model: 'iPhone 14 Pro Max',
+    year: '2022.9',
+    price: '¥3800-4500',
+    tier: '大屏',
+    highlight: false,
+    specs: {
+      chip: 'A16',
+      screen: '6.7" OLED ProMotion',
+      refresh: '120Hz',
+      ram: '6GB',
+      camera: '4800万',
+      telephoto: '3x 光学',
+      battery: '4323mAh',
+      weight: '240g',
+      storage: '128/256/512/1TB',
+      dynamicIsland: '✓',
+      alwaysOn: '✓',
+      usbc: '❌ Lightning',
+      launchPrice: '¥8999起'
+    }
+  },
+  {
+    model: 'iPhone 15',
+    year: '2023.9',
+    price: '¥3200-3800',
+    tier: '标准版',
+    highlight: false,
+    specs: {
+      chip: 'A16',
+      screen: '6.1" OLED',
+      refresh: '60Hz',
+      ram: '6GB',
+      camera: '4800万',
+      telephoto: '无 (2x 裁切)',
+      battery: '3349mAh',
+      weight: '171g',
+      storage: '128/256/512GB',
+      dynamicIsland: '✓',
+      alwaysOn: '❌',
+      usbc: '✓ USB 2.0',
+      launchPrice: '¥5999起'
+    }
+  },
+  {
+    model: 'iPhone 15 Plus',
+    year: '2023.9',
+    price: '¥3800-4500',
+    tier: '大屏',
+    highlight: false,
+    specs: {
+      chip: 'A16',
+      screen: '6.7" OLED',
+      refresh: '60Hz',
+      ram: '6GB',
+      camera: '4800万',
+      telephoto: '无 (2x 裁切)',
+      battery: '4383mAh',
+      weight: '201g',
+      storage: '128/256/512GB',
+      dynamicIsland: '✓',
+      alwaysOn: '❌',
+      usbc: '✓ USB 2.0',
+      launchPrice: '¥6999起'
+    }
+  },
+  {
+    model: 'iPhone 15 Pro',
+    year: '2023.9',
+    price: '¥4500-5200',
+    tier: 'Pro 版',
+    highlight: false,
+    specs: {
+      chip: 'A17 Pro',
+      screen: '6.1" OLED ProMotion',
+      refresh: '120Hz',
+      ram: '8GB',
+      camera: '4800万',
+      telephoto: '3x 光学',
+      battery: '3274mAh',
+      weight: '187g',
+      storage: '128/256/512/1TB',
+      dynamicIsland: '✓',
+      alwaysOn: '✓',
+      usbc: '✓ USB 3.0',
+      launchPrice: '¥7999起'
+    }
+  },
+  {
+    model: 'iPhone 15 Pro Max',
+    year: '2023.9',
+    price: '¥5500-6500',
+    tier: '大屏',
+    highlight: false,
+    specs: {
+      chip: 'A17 Pro',
+      screen: '6.7" OLED ProMotion',
+      refresh: '120Hz',
+      ram: '8GB',
+      camera: '4800万',
+      telephoto: '5x 光学',
+      battery: '4422mAh',
+      weight: '221g',
+      storage: '256/512/1TB',
+      dynamicIsland: '✓',
+      alwaysOn: '✓',
+      usbc: '✓ USB 3.0',
+      launchPrice: '¥9999起'
+    }
+  },
+  {
+    model: 'iPhone 16',
+    year: '2024.9',
+    price: '¥4500-5200',
+    tier: '标准版',
+    highlight: false,
+    specs: {
+      chip: 'A18',
+      screen: '6.1" OLED',
+      refresh: '60Hz',
+      ram: '8GB',
+      camera: '4800万',
+      telephoto: '无 (2x 裁切)',
+      battery: '3561mAh',
+      weight: '170g',
+      storage: '128/256/512GB',
+      dynamicIsland: '✓',
+      alwaysOn: '❌',
+      usbc: '✓ USB 2.0',
+      launchPrice: '¥5999起'
+    }
+  },
+  {
+    model: 'iPhone 16 Plus',
+    year: '2024.9',
+    price: '¥5200-5800',
+    tier: '大屏',
+    highlight: false,
+    specs: {
+      chip: 'A18',
+      screen: '6.7" OLED',
+      refresh: '60Hz',
+      ram: '8GB',
+      camera: '4800万',
+      telephoto: '无 (2x 裁切)',
+      battery: '4674mAh',
+      weight: '199g',
+      storage: '128/256/512GB',
+      dynamicIsland: '✓',
+      alwaysOn: '❌',
+      usbc: '✓ USB 2.0',
+      launchPrice: '¥6999起'
+    }
+  },
+  {
+    model: 'iPhone 16 Pro',
+    year: '2024.9',
+    price: '¥6200-7000',
+    tier: 'Pro 版',
+    highlight: false,
+    specs: {
+      chip: 'A18 Pro',
+      screen: '6.3" OLED ProMotion',
+      refresh: '120Hz',
+      ram: '8GB',
+      camera: '4800万',
+      telephoto: '5x 光学',
+      battery: '3577mAh',
+      weight: '199g',
+      storage: '128/256/512/1TB',
+      dynamicIsland: '✓',
+      alwaysOn: '✓',
+      usbc: '✓ USB 3.0',
+      launchPrice: '¥7999起'
+    }
+  },
+  {
+    model: 'iPhone 16 Pro Max',
+    year: '2024.9',
+    price: '¥7500-8500',
+    tier: '大屏',
+    highlight: false,
+    specs: {
+      chip: 'A18 Pro',
+      screen: '6.9" OLED ProMotion',
+      refresh: '120Hz',
+      ram: '8GB',
+      camera: '4800万',
+      telephoto: '5x 光学',
+      battery: '4685mAh',
+      weight: '227g',
+      storage: '256/512/1TB',
+      dynamicIsland: '✓',
+      alwaysOn: '✓',
+      usbc: '✓ USB 3.0',
+      launchPrice: '¥9999起'
+    }
+  }
+]
+
+const filteredPhones = computed(() => {
+  if (selectedTier.value === '全部') return phones
+  return phones.filter(p => p.tier === selectedTier.value)
+})
+</script>
+
+<style scoped>
+.iphone-compare {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  padding: 40px 0 32px;
+  position: relative;
+}
+
+.back-btn {
+  position: absolute;
+  left: 0;
+  top: 44px;
+  background: rgba(255,255,255,0.7);
+  border: 1px solid rgba(255,255,255,0.9);
+  border-radius: 12px;
+  padding: 8px 16px;
+  font-size: 14px;
+  color: #6366f1;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(8px);
+}
+
+.back-btn:hover {
+  background: rgba(255,255,255,0.95);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.header-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 8px;
+}
+
+.subtitle {
+  font-size: 15px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Recommend */
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 20px;
+}
+
+.recommend-section {
+  margin-bottom: 36px;
+}
+
+.recommend-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.rec-card {
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid rgba(255,255,255,0.9);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+  transition: all 0.3s;
+}
+
+.rec-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+.rec-card.best {
+  border-color: rgba(99,102,241,0.3);
+  background: linear-gradient(135deg, rgba(238,242,255,0.9), rgba(224,231,255,0.9));
+}
+
+.rec-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  margin-bottom: 12px;
+}
+
+.rec-model {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 4px;
+}
+
+.rec-price {
+  font-size: 14px;
+  color: #6366f1;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.rec-reasons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: #475569;
+}
+
+.rec-tip {
+  font-size: 12px;
+  color: #94a3b8;
+  text-align: center;
+}
+
+/* Filter */
+.filter-section {
+  margin-bottom: 24px;
+}
+
+.filter-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 8px 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(8px);
+  font-size: 14px;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover {
+  background: rgba(255,255,255,0.9);
+}
+
+.filter-btn.active {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 2px 12px rgba(99,102,241,0.3);
+}
+
+/* Table */
+.table-section {
+  margin-bottom: 40px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.9);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+}
+
+.spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  min-width: 900px;
+}
+
+.spec-table th,
+.spec-table td {
+  padding: 14px 16px;
+  text-align: center;
+  border-bottom: 1px solid rgba(226,232,240,0.6);
+  white-space: nowrap;
+}
+
+.spec-table th {
+  background: rgba(248,250,252,0.8);
+  font-weight: 600;
+  color: #475569;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.sticky-col {
+  position: sticky;
+  left: 0;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(8px);
+  z-index: 1;
+  text-align: left !important;
+  font-weight: 600;
+  color: #475569;
+  min-width: 100px;
+}
+
+th.sticky-col {
+  z-index: 3;
+  background: rgba(248,250,252,0.95);
+}
+
+.spec-label {
+  font-weight: 600;
+  color: #475569;
+}
+
+.highlight {
+  background: rgba(238,242,255,0.5);
+}
+
+.phone-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.phone-model {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.phone-year {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.phone-price {
+  font-size: 11px;
+  color: #6366f1;
+  font-weight: 600;
+}
+
+.spec-table tbody tr:hover {
+  background: rgba(248,250,252,0.6);
+}
+
+/* Advice */
+.advice-section {
+  margin-bottom: 40px;
+}
+
+.advice-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.advice-card {
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid rgba(255,255,255,0.9);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+  transition: all 0.3s;
+}
+
+.advice-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+}
+
+.advice-card h3 {
+  font-size: 16px;
+  margin: 0 0 10px;
+  color: #1e293b;
+}
+
+.advice-card p {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.advice-card strong {
+  color: #6366f1;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header {
+    padding: 32px 0 24px;
+  }
+  .back-btn {
+    position: static;
+    margin-bottom: 12px;
+  }
+  .title {
+    font-size: 22px;
+  }
+  .recommend-cards {
+    grid-template-columns: 1fr;
+  }
+  .advice-cards {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

@@ -3,12 +3,18 @@ import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
   {
     path: '/',
-    redirect: '/vaccine-plan'
+    name: 'Home',
+    component: () => import('../views/Home.vue')
   },
   {
     path: '/vaccine-plan',
     name: 'VaccinePlan',
     component: () => import('../views/VaccinePlan.vue')
+  },
+  {
+    path: '/iphone-compare',
+    name: 'IPhoneCompare',
+    component: () => import('../views/IPhoneCompare.vue')
   }
 ]
 
